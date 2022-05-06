@@ -64,35 +64,43 @@ values ('AAA', 'WEB', 'aaa'),
 # SW활용 현황 통계 API 구축을 위한 SQL 작성
 
 # 월별 접속자 수
-select substr(createDate, 1, 4), count(*)
+select substr(createDate, 1, 4) as month, count(*) as count
 from requestInfo
 group by substr(createDate, 1, 4);
 
 # 일별 접속자 수
-select createDate, count(*)
+select createDate as date, count(*) as count
 from requestInfo
 group by createDate;
 
 # 일별 접속자 수
-select count(*)
+select count(*) as count
 from requestInfo
 group by createDate;
 
 # 평균 하루 로그인 수
-select count(*)
+select count(*) as count
 from requestInfo
 where requestCode = 'L'
 group by createDate;
 
 # 부서별 월별 로그인 수
-select createDate, HR_ORGAN, count(*)
+select createDate as date, HR_ORGAN as org, count(*) as count
 from (select requestInfo.userID, requestInfo.requestCode, requestInfo.createDate, user.HR_ORGAN, user.USERNAME
       from requestInfo
                left join
            user on requestInfo.userID = user.userID
+      where requestInfo.requestCode = 'L'
       union
       select requestInfo.userID, requestInfo.requestCode, requestInfo.createDate, user.HR_ORGAN, user.USERNAME
       from requestInfo
                right join
-           user on requestInfo.userID = user.userID) as a
+           user on requestInfo.userID = user.userID
+      where requestInfo.requestCode = 'L'
+      ) as a
 group by createDate, HR_ORGAN;
+
+# 휴일을 제외한 로그인 수
+select count(*) as count, left(createDate, 6) as date
+from requestInfo
+where requestCode = 'L';

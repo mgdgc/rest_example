@@ -1,4 +1,4 @@
-package xyz.ridsoft.restexample;
+package xyz.ridsoft.restexample.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

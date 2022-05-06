@@ -3,8 +3,10 @@ package xyz.ridsoft.restexample.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.ridsoft.restexample.dao.StatisticMapper;
+import xyz.ridsoft.restexample.dto.StatisticDto;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class StatisticServiceImpl implements StatisticService {
@@ -28,6 +30,31 @@ public class StatisticServiceImpl implements StatisticService {
         }
 
         return retVal;
+    }
+
+    @Override
+    public List<StatisticDto> getMonthlyRequest() {
+        return uMapper.getMonthlyRequest();
+    }
+
+    @Override
+    public List<StatisticDto> getDailyRequest() {
+        return uMapper.getDailyRequest();
+    }
+
+    @Override
+    public List<StatisticDto> getDailyLoginRequest() {
+        return uMapper.getDailyLoginRequest();
+    }
+
+    @Override
+    public List<StatisticDto> getMonthlyLoginByOrg() {
+        return uMapper.getMonthlyLoginByOrg();
+    }
+
+    @Override
+    public List<StatisticDto> getLoginsWithDate() {
+        return uMapper.getLoginsWithDate();
     }
 
 }

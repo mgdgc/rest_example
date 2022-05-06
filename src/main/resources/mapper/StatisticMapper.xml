@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="xyz.ridsoft.restexample.dao.StatisticMapper">
+
+    <select id="selectYearLogin" parameterType="string" resultType="hashMap">
+        select count(*) as totCnt
+        from statistic.requestinfo ri
+        where left(ri.createDate, 2) = #{year};
+    </select>
+
+    <select id="getMonthlyRequest" resultType="StatisticDto">
+        select substr(createDate, 1, 4) as date, count(*) as count
+        from requestInfo
+        group by substr(createDate, 1, 4);
+    </select>
+
+    <select id="getDailyRequest" resultType="StatisticDto">
+        select createDate as date, count(*) as count
+        from requestInfo
+        group by createDate;
+    </select>
+
+    <select id="getDailyLoginRequest" resultType="StatisticDto">
+        select count(*) as count
+        from requestInfo
+        where requestCode = 'L'
+        group by createDate;
+    </select>
+    
+    <select id="getMonthlyLoginByOrg" resultType="StatisticDto">
+        select createDate as date, HR_ORGAN as org, count(*) as count
+        from (select requestInfo.userID, requestInfo.requestCode, requestInfo.createDate, user.HR_ORGAN, user.USERNAME
+              from requestInfo
+                       left join
+                   user on requestInfo.userID = user.userID
+              where requestInfo.requestCode = 'L'
+              union
+              select requestInfo.userID, requestInfo.requestCode, requestInfo.createDate, user.HR_ORGAN, user.USERNAME
+              from requestInfo
+                       right join
+                   user on requestInfo.userID = user.userID
+              where requestInfo.requestCode = 'L'
+             ) as a
+        group by createDate, HR_ORGAN;
+    </select>
+    
+    <select id="getLoginsWithDate" resultType="StatisticDto">
+        select left(createDate, 6) as date, count(*) as count
+        from requestInfo
+        where requestCode = 'L';
+    </select>
+
+</mapper>
